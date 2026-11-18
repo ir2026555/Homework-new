@@ -140,8 +140,8 @@
 
         const comment = comments.find(c => c.id === commentId);
         if (comment) {
-          nameInput.value = comment.name;
-          textInput.value = `> ${comment.text}\n\n`;
+          nameInput.value = null;
+          textInput.value = `${comment.name}> ${comment.text}\n\n`;
         }
       });
     }
