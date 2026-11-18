@@ -1,5 +1,6 @@
 import { renderComments } from './render-comments.js';
 import { comments } from './comments.js';
+import { fetchComments, sendComments } from './api.js';
 
 export function handleLikes() {
   document.querySelector('.comments').addEventListener('click', (event) => {
@@ -17,8 +18,8 @@ export function handleLikes() {
           comment.isLiked = true;
         }
         renderComments(comments);
+        }
       }
-    }
   });
 }
 
@@ -38,8 +39,8 @@ export function setupReplyHandler() {
 
     const comment = comments.find((c) => c.id === commentId);
     if (comment) {
-      nameInput.value = comment.name;
-      textInput.value = `> ${comment.text}\n\n`;
+      nameInput.value = null;
+      textInput.value = `${comment.name}> ${comment.text}\n\n`;
     }
   });
 }
@@ -49,9 +50,9 @@ export function setupAddCommentHandler() {
   const nameInput = document.querySelector('.add-form-name');
   const textInput = document.querySelector('.add-form-text');
 
-  addButton.addEventListener('click', () => {
-    const name = nameInput.value.trim();
-    const text = textInput.value.trim();
+    addButton.addEventListener('click', () => {
+        const name = nameInput.value.trim();
+        const text = textInput.value.trim();
 
     if (!name || !text) {
       alert('Заполнены не все поля');
@@ -67,18 +68,18 @@ export function setupAddCommentHandler() {
     });
 
     const newComment = {
-      id: Date.now(),
       name: name,
-      date: date,
       text: text,
-      likes: 0,
-      isLiked: false,
     };
-
-    comments.push(newComment);
-    renderComments(comments);
-
-    nameInput.value = '';
-    textInput.value = '';
+    
+    sendComments(newComment)
+      .then(() => {
+        return fetchComments();
+      })
+      then((data) => {
+        renderComments(data.comments);
+        nameInput.value = '';
+        textInput.value = '';
+      });
   });
 }

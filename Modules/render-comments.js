@@ -9,7 +9,7 @@ export function renderComments(comments) {
     html += `
       <li class="comment" data-id="${comment.id}">
         <div class="comment-header">
-          <div>${escapeHtml(comment.name)}</div>
+          <div>${escapeHtml(comment.author.name)}</div>
           <div>${comment.date}</div>
         </div>
         <div class="comment-body">
